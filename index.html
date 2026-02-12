@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halal Stock Screener - Explore Halal Investments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #16161f;
+            --bg-card-hover: #1c1c28;
+            --bg-elevated: #1e1e2a;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.12);
+            --text-primary: #f0f0f5;
+            --text-secondary: #8b8b9e;
+            --text-tertiary: #5a5a6e;
+            --accent-green: #00d4aa;
+            --accent-green-dim: rgba(0, 212, 170, 0.12);
+            --accent-red: #ff4d6a;
+            --accent-red-dim: rgba(255, 77, 106, 0.12);
+            --accent-purple: #7b61ff;
+            --accent-purple-dim: rgba(123, 97, 255, 0.1);
+            --accent-blue: #4da6ff;
+            --accent-gold: #f5a623;
+            --rating-a: #00d4aa;
+            --rating-b: #4da6ff;
+            --rating-c: #f5a623;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 600px;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(123, 97, 255, 0.15), transparent),
+                radial-gradient(ellipse 60% 40% at 20% 10%, rgba(0, 212, 170, 0.08), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 10%, rgba(77, 166, 255, 0.08), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.8);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .navbar-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .logo-text span {
+            color: var(--accent-green);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: var(--accent-green-dim);
+            color: var(--accent-green);
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 212, 170, 0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px 40px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: var(--accent-purple-dim);
+            color: var(--accent-purple);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border: 1px solid rgba(123, 97, 255, 0.2);
+        }
+
+        .hero-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, #fff 50%, var(--accent-green) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 540px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Search & Filters */
+        .controls {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 24px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px var(--accent-purple-dim);
+        }
+
+        .search-count {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            margin-right: 4px;
+        }
+
+        .filter-btn {
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .filter-btn.active {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: var(--accent-purple-dim);
+        }
+
+        .sort-select {
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+            margin-left: auto;
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 32px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b8b9e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        .sort-select:focus {
+            border-color: var(--accent-purple);
+        }
+
+        .sort-select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        /* Table */
+        .table-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 100px 120px;
+            padding: 12px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-header span:nth-child(3),
+        .table-header span:nth-child(4),
+        .table-header span:nth-child(5) {
+            text-align: right;
+        }
+
+        .stock-list {
+            list-style: none;
+        }
+
+        .stock-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 120px 100px 120px;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .stock-row:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .stock-rank {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+        }
+
+        .stock-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .stock-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stock-details {
+            min-width: 0;
+        }
+
+        .stock-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
+        }
+
+        .stock-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 3px;
+        }
+
+        .stock-ticker {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .halal-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 4px;
+            letter-spacing: 0.02em;
+        }
+
+        .halal-badge.rating-a {
+            background: rgba(0, 212, 170, 0.12);
+            color: var(--rating-a);
+        }
+
+        .halal-badge.rating-b {
+            background: rgba(77, 166, 255, 0.12);
+            color: var(--rating-b);
+        }
+
+        .halal-badge.rating-c {
+            background: rgba(245, 166, 35, 0.12);
+            color: var(--rating-c);
+        }
+
+        .stock-price {
+            text-align: right;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stock-change {
+            text-align: right;
+            font-size: 13px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stock-change.positive {
+            color: var(--accent-green);
+        }
+
+        .stock-change.negative {
+            color: var(--accent-red);
+        }
+
+        .stock-change.neutral {
+            color: var(--text-tertiary);
+        }
+
+        .stock-rating-cell {
+            text-align: right;
+        }
+
+        .rating-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .rating-pill.rating-a {
+            background: rgba(0, 212, 170, 0.1);
+            color: var(--rating-a);
+        }
+
+        .rating-pill.rating-b {
+            background: rgba(77, 166, 255, 0.1);
+            color: var(--rating-b);
+        }
+
+        .rating-pill.rating-c {
+            background: rgba(245, 166, 35, 0.1);
+            color: var(--rating-c);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state svg {
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 13px;
+        }
+
+        .footer a {
+            color: var(--accent-purple);
+            text-decoration: none;
+        }
+
+        /* Scroll to top */
+        .scroll-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            z-index: 50;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-top:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stock-row {
+            animation: fadeIn 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-inner {
+                padding: 0 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 48px 16px 24px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .stats-bar {
+                gap: 24px;
+            }
+
+            .stat-value {
+                font-size: 22px;
+            }
+
+            .controls {
+                padding: 0 16px 16px;
+            }
+
+            .table-container {
+                padding: 0 16px 60px;
+            }
+
+            .table-header {
+                grid-template-columns: 1fr 100px;
+                padding: 10px 16px;
+            }
+
+            .table-header span:nth-child(1) {
+                display: none;
+            }
+
+            .table-header span:nth-child(4) {
+                display: none;
+            }
+
+            .table-header span:nth-child(5) {
+                display: none;
+            }
+
+            .stock-row {
+                grid-template-columns: 1fr auto;
+                padding: 12px 16px;
+                gap: 8px;
+            }
+
+            .stock-rank {
+                display: none;
+            }
+
+            .stock-rating-cell {
+                display: none;
+            }
+
+            .stock-price-wrap {
+                text-align: right;
+            }
+
+            .stock-change {
+                text-align: right;
+                font-size: 12px;
+            }
+
+            .stock-name {
+                max-width: 180px;
+            }
+
+            .stock-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 12px;
+                border-radius: 10px;
+            }
+
+            .filter-row {
+                gap: 6px;
+            }
+
+            .filter-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stock-name {
+                max-width: 140px;
+                font-size: 13px;
+            }
+
+            .stats-bar {
+                gap: 16px;
+            }
+        }
+
+        /* Flag icon */
+        .flag-fr {
+            display: inline-block;
+            width: 20px;
+            height: 14px;
+            background: linear-gradient(to right, #002395 33.3%, #fff 33.3%, #fff 66.6%, #ED2939 66.6%);
+            border-radius: 2px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        /* Live indicator */
+        .live-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            display: inline-block;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        .live-dot.offline {
+            background: var(--accent-red);
+            animation: none;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.4);
+            }
+
+            50% {
+                opacity: 0.7;
+                box-shadow: 0 0 0 4px rgba(0, 212, 170, 0);
+            }
+        }
+
+        /* Shimmer on price cells during refresh */
+        @keyframes shimmer {
+            0% {
+                background-position: -200px 0;
+            }
+
+            100% {
+                background-position: 200px 0;
+            }
+        }
+
+        .stock-price.loading,
+        .stock-change.loading {
+            color: transparent !important;
+            background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+            background-size: 200px 100%;
+            animation: shimmer 1.2s ease-in-out infinite;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-gradient"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="logo">
+                <div class="logo-icon">H</div>
+                <div class="logo-text">Halal<span>Invest</span></div>
+            </a>
+            <div class="nav-links">
+                <a href="#" class="active">Explore</a>
+                <a href="#">About</a>
+                <a href="#">Methodology</a>
+            </div>
+            <div class="nav-badge">
+                <div class="flag-fr"></div>
+                122 Stocks
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+            Shariah-Compliant Investments
+        </div>
+        <h1>Explore Halal Stocks</h1>
+        <p>Discover 122 Shariah-compliant stocks listed on the French market, screened and rated for halal investing.
+        </p>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="totalStocks">122</div>
+                <div class="stat-label">Total Stocks</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="ratingACount">-</div>
+                <div class="stat-label">A-Rated</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="ratingBCount">-</div>
+                <div class="stat-label">B-Rated</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="ratingCCount">-</div>
+                <div class="stat-label">C-Rated</div>
+            </div>
+        </div>
+
+        <div class="live-bar" id="liveBar">
+            <span class="live-dot" id="liveDot"></span>
+            <span id="liveStatus">Loading live prices...</span>
+        </div>
+    </section>
+
+    <!-- Controls -->
+    <div class="controls">
+        <div class="search-container">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search by name, ticker, or rating...">
+            <span class="search-count" id="searchCount">122 stocks</span>
+        </div>
+        <div class="filter-row">
+            <span class="filter-label">Rating:</span>
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="A">A-Rated</button>
+            <button class="filter-btn" data-filter="B">B-Rated</button>
+            <button class="filter-btn" data-filter="C">C-Rated</button>
+            <select class="sort-select" id="sortSelect">
+                <option value="default">Sort: Default</option>
+                <option value="name-asc">Name A-Z</option>
+                <option value="name-desc">Name Z-A</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="change-desc">Change: Best First</option>
+                <option value="change-asc">Change: Worst First</option>
+                <option value="rating-asc">Rating: Best First</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+        <div class="table-header">
+            <span>#</span>
+            <span>Stock</span>
+            <span>Price</span>
+            <span>24h</span>
+            <span>Rating</span>
+        </div>
+        <ul class="stock-list" id="stockList"></ul>
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <p>No stocks found matching your search.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Halal Stock Screener &mdash; Data sourced from Shariah screening providers. Not financial advice.</p>
+    </footer>
+
+    <!-- Scroll to top -->
+    <button class="scroll-top" id="scrollTop">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15" />
+        </svg>
+    </button>
+
+    <script>
+        const stocks = [
+            { name: "L'Oreal SA", ticker: "OR.PA", rating: "A", ratingFull: "HALAL I A", price: 391.90, change: -0.33, color: "#1a1a2e" },
+            { name: "Schneider Electric SE", ticker: "SU.PA", rating: "A-", ratingFull: "HALAL I A-", price: 266.35, change: -3.48, color: "#3d8c40" },
+            { name: "EssilorLuxottica SA", ticker: "EL.PA", rating: "A-", ratingFull: "HALAL I A-", price: 250.80, change: -0.12, color: "#2c3e50" },
+            { name: "Sanofi SA", ticker: "SAN.PA", rating: "C+", ratingFull: "HALAL I C+", price: 82.56, change: -0.76, color: "#7b61ff" },
+            { name: "L'Air Liquide Societe Anonyme", ticker: "AI.PA", rating: "A", ratingFull: "HALAL I A", price: 167.90, change: -0.94, color: "#1e3a5f" },
+            { name: "Legrand SA", ticker: "LR.PA", rating: "C+", ratingFull: "HALAL I C+", price: 144.65, change: -2.73, color: "#ff4d4d" },
+            { name: "Dassault Systemes SE", ticker: "DSY.PA", rating: "B+", ratingFull: "HALAL I B+", price: 17.77, change: -1.88, color: "#2980b9" },
+            { name: "Capgemini SE", ticker: "CAP.PA", rating: "B-", ratingFull: "HALAL I B-", price: 104.30, change: -6.46, color: "#1a73e8" },
+            { name: "STMicroelectronics NV", ticker: "STMPA.PA", rating: "A-", ratingFull: "HALAL I A-", price: 28.89, change: -2.99, color: "#3f51b5" },
+            { name: "Sartorius Stedim Biotech SA", ticker: "DIM.PA", rating: "B-", ratingFull: "HALAL I B-", price: 173.55, change: -2.00, color: "#ffd700" },
+            { name: "Bureau Veritas SA", ticker: "BVI.PA", rating: "B-", ratingFull: "HALAL I B-", price: 27.56, change: -1.92, color: "#e74c3c" },
+            { name: "Biomerieux SA", ticker: "BIM.PA", rating: "A", ratingFull: "HALAL I A", price: 92.95, change: -1.48, color: "#2196f3" },
+            { name: "Ipsen SA", ticker: "IPN.PA", rating: "C", ratingFull: "HALAL I C", price: 138.80, change: -0.86, color: "#ff9800" },
+            { name: "Gaztransport et Technigaz SA", ticker: "GTT.PA", rating: "A", ratingFull: "HALAL I A", price: 176.90, change: -0.84, color: "#607d8b" },
+            { name: "Trigano SA", ticker: "TRI.PA", rating: "C", ratingFull: "HALAL I C", price: 169.20, change: -1.63, color: "#e53935" },
+            { name: "Virbac SA", ticker: "VIRP.PA", rating: "B-", ratingFull: "HALAL I B-", price: 356.00, change: -0.56, color: "#00796b" },
+            { name: "Exosens SAS", ticker: "EXENS.PA", rating: "B", ratingFull: "HALAL I B", price: 53.20, change: -3.62, color: "#455a64" },
+            { name: "Alten SA", ticker: "ATE.PA", rating: "A", ratingFull: "HALAL I A", price: 66.95, change: -6.49, color: "#1565c0" },
+            { name: "Vusiongroup SA", ticker: "VU.PA", rating: "C", ratingFull: "HALAL I C", price: 126.70, change: -1.36, color: "#263238" },
+            { name: "Societe BIC SA", ticker: "BB.PA", rating: "C+", ratingFull: "HALAL I C+", price: 54.80, change: -1.62, color: "#ff6f00" },
+            { name: "Interparfums SA", ticker: "ITP.PA", rating: "B", ratingFull: "HALAL I B", price: 24.96, change: -1.19, color: "#6a1b9a" },
+            { name: "Robertet SA", ticker: "RBT.PA", rating: "B+", ratingFull: "HALAL I B+", price: 846.00, change: -0.24, color: "#2e7d32" },
+            { name: "Esker SA", ticker: "ESKR.PA", rating: "A", ratingFull: "HALAL I A", price: 277.40, change: -1.20, color: "#0288d1" },
+            { name: "Ipsos SA", ticker: "IPS.PA", rating: "C-", ratingFull: "HALAL I C-", price: 31.26, change: -6.13, color: "#546e7a" },
+            { name: "Planisware SA", ticker: "PLNW.PA", rating: "B+", ratingFull: "HALAL I B+", price: 17.30, change: -8.08, color: "#00838f" },
+            { name: "Etablissements Maurel et Prom", ticker: "MAU.PA", rating: "C", ratingFull: "HALAL I C", price: 7.39, change: -2.35, color: "#4e342e" },
+            { name: "Vetoquinol SA", ticker: "VETO.PA", rating: "B+", ratingFull: "HALAL I B+", price: 87.10, change: -0.58, color: "#00695c" },
+            { name: "Neurones SA", ticker: "NRO.PA", rating: "C-", ratingFull: "HALAL I C-", price: 36.40, change: -7.02, color: "#283593" },
+            { name: "Soitec SA", ticker: "SOI.PA", rating: "C-", ratingFull: "HALAL I C-", price: 39.10, change: -13.33, color: "#1a237e" },
+            { name: "Lectra SA", ticker: "LSS.PA", rating: "A", ratingFull: "HALAL I A", price: 22.10, change: -3.91, color: "#0d47a1" },
+            { name: "Aubay SA", ticker: "AUB.PA", rating: "B+", ratingFull: "HALAL I B+", price: 50.40, change: -6.49, color: "#e65100" },
+            { name: "Placoplatre SA", ticker: "MLPLC.PA", rating: "A+", ratingFull: "HALAL I A+", price: 525.00, change: 0.00, color: "#1b5e20" },
+            { name: "Thermador Groupe SA", ticker: "THEP.PA", rating: "A", ratingFull: "HALAL I A", price: 79.00, change: -1.13, color: "#bf360c" },
+            { name: "Assystem SA", ticker: "ASY.PA", rating: "C-", ratingFull: "HALAL I C-", price: 43.50, change: -8.42, color: "#b71c1c" },
+            { name: "Equasens SA", ticker: "EQS.PA", rating: "C+", ratingFull: "HALAL I C+", price: 37.00, change: -4.39, color: "#00c853" },
+            { name: "Boiron SA", ticker: "BOL.PA", rating: "A-", ratingFull: "HALAL I A-", price: 29.80, change: -0.34, color: "#2e7d32" },
+            { name: "Groupe Guillin SA", ticker: "ALGIL.PA", rating: "B", ratingFull: "HALAL I B", price: 23.80, change: -0.83, color: "#e53935" },
+            { name: "Semco Technologies SAS", ticker: "ALSEM.PA", rating: "C+", ratingFull: "HALAL I C+", price: 32.41, change: -2.07, color: "#37474f" },
+            { name: "Stif France SAS", ticker: "ALSTI.PA", rating: "B+", ratingFull: "HALAL I B+", price: 61.60, change: -5.23, color: "#212121" },
+            { name: "Gerard Perrier Industrie SA", ticker: "PERR.PA", rating: "B", ratingFull: "HALAL I B", price: 87.60, change: -0.46, color: "#1b5e20" },
+            { name: "Versity SA", ticker: "MLVSY.PA", rating: "A+", ratingFull: "HALAL I A+", price: 0.99, change: -10.00, color: "#7b1fa2" },
+            { name: "Eurobio Scientific SA", ticker: "ALERS.PA", rating: "A-", ratingFull: "HALAL I A-", price: 23.80, change: -0.63, color: "#43a047" },
+            { name: "Parrot SA", ticker: "PARRO.PA", rating: "B", ratingFull: "HALAL I B", price: 5.58, change: -1.76, color: "#455a64" },
+            { name: "Sidetrade SA", ticker: "ALBFR.PA", rating: "B", ratingFull: "HALAL I B", price: 119.00, change: -11.85, color: "#0277bd" },
+            { name: "Streamwide SA", ticker: "ALSTW.PA", rating: "C", ratingFull: "HALAL I C", price: 72.00, change: -1.10, color: "#00838f" },
+            { name: "Euroapi SA", ticker: "EAPI.PA", rating: "B+", ratingFull: "HALAL I B+", price: 2.19, change: -1.95, color: "#0d47a1" },
+            { name: "Wallix Group SA", ticker: "ALLIX.PA", rating: "A-", ratingFull: "HALAL I A-", price: 24.00, change: -15.19, color: "#ff6f00" },
+            { name: "Societe Marseillaise du Tunnel", ticker: "ALTPC.PA", rating: "C+", ratingFull: "HALAL I C+", price: 28.40, change: -1.07, color: "#4527a0" },
+            { name: "Vente-Unique.Com SA", ticker: "ALVU.PA", rating: "C-", ratingFull: "HALAL I C-", price: 16.50, change: -1.85, color: "#6d4c41" },
+            { name: "Precia SA", ticker: "ALPM.PA", rating: "C", ratingFull: "HALAL I C", price: 27.50, change: 0.00, color: "#558b2f" },
+            { name: "Maat Pharma SA", ticker: "MAAT.PA", rating: "C+", ratingFull: "HALAL I C+", price: 7.06, change: -3.29, color: "#1565c0" },
+            { name: "NSE SA", ticker: "ALNSE.PA", rating: "B", ratingFull: "HALAL I B", price: 43.00, change: -0.47, color: "#f57f17" },
+            { name: "Abionyx Pharma SA", ticker: "ABNX.PA", rating: "A-", ratingFull: "HALAL I A-", price: 3.55, change: -3.53, color: "#1a237e" },
+            { name: "Cheops Technology France", ticker: "MLCHE.PA", rating: "B", ratingFull: "HALAL I B", price: 58.00, change: 0.00, color: "#263238" },
+            { name: "Entech SA", ticker: "ALESE.PA", rating: "B+", ratingFull: "HALAL I B+", price: 9.75, change: -3.72, color: "#00695c" },
+            { name: "Adocia SA", ticker: "ADOC.PA", rating: "B", ratingFull: "HALAL I B", price: 6.42, change: -3.60, color: "#ad1457" },
+            { name: "Vaziva SA", ticker: "ALVAZ.PA", rating: "A+", ratingFull: "HALAL I A+", price: 39.00, change: 0.00, color: "#e65100" },
+            { name: "Scientia School SA", ticker: "MLSCI.PA", rating: "C+", ratingFull: "HALAL I C+", price: 4.06, change: 0.00, color: "#37474f" },
+            { name: "Crossject SA", ticker: "ALCJ.PA", rating: "B", ratingFull: "HALAL I B", price: 2.02, change: -7.76, color: "#004d40" },
+            { name: "Coheris SA", ticker: "COH.PA", rating: "C", ratingFull: "HALAL I C", price: 13.90, change: -1.09, color: "#880e4f" },
+            { name: "Les Docks des Petroles d'Ambes", ticker: "DPAM.PA", rating: "C+", ratingFull: "HALAL I C+", price: 930.00, change: 0.00, color: "#33691e" },
+            { name: "Hoffmann Green Cement Technologies", ticker: "ALHGR.PA", rating: "B-", ratingFull: "HALAL I B-", price: 4.66, change: -0.96, color: "#2e7d32" },
+            { name: "Baikowski SA", ticker: "ALBKK.PA", rating: "B", ratingFull: "HALAL I B", price: 20.60, change: -3.00, color: "#1a237e" },
+            { name: "Mexedia SpA SB", ticker: "ALMEX.PA", rating: "A+", ratingFull: "HALAL I A+", price: 12.10, change: 0.00, color: "#0d47a1" },
+            { name: "Omer Decugis & Cie SA", ticker: "ALODC.PA", rating: "B+", ratingFull: "HALAL I B+", price: 9.64, change: -2.23, color: "#f9a825" },
+            { name: "Bilendi SA", ticker: "ALBLD.PA", rating: "B-", ratingFull: "HALAL I B-", price: 14.45, change: -4.71, color: "#4e342e" },
+            { name: "Mgi Digital Technology SA", ticker: "ALMDG.PA", rating: "C-", ratingFull: "HALAL I C-", price: 8.70, change: -3.55, color: "#00bfa5" },
+            { name: "Fiducial Office Solutions SA", ticker: "SACI.PA", rating: "A-", ratingFull: "HALAL I A-", price: 26.80, change: 0.00, color: "#424242" },
+            { name: "AbL Diagnostics SA", ticker: "ABLD.PA", rating: "A", ratingFull: "HALAL I A", price: 3.20, change: -9.09, color: "#263238" },
+            { name: "Paris Realty Fund SA", ticker: "PAR.PA", rating: "A", ratingFull: "HALAL I A", price: 29.10, change: -4.90, color: "#1b5e20" },
+            { name: "TronicS Microsystems SA", ticker: "ALTRO.PA", rating: "B-", ratingFull: "HALAL I B-", price: 5.56, change: 0.00, color: "#37474f" },
+            { name: "Maq Administracion Urbana", ticker: "MLMAQ.PA", rating: "C+", ratingFull: "HALAL I C+", price: 8.30, change: 0.00, color: "#546e7a" },
+            { name: "Drone Volt SA", ticker: "ALDRV.PA", rating: "B+", ratingFull: "HALAL I B+", price: 0.60, change: -1.32, color: "#78909c" },
+            { name: "IT Link SA", ticker: "ALITL.PA", rating: "C", ratingFull: "HALAL I C", price: 20.50, change: -2.38, color: "#e53935" },
+            { name: "Memscap SA", ticker: "MEMS.PA", rating: "C-", ratingFull: "HALAL I C-", price: 4.87, change: -6.45, color: "#1565c0" },
+            { name: "Hydrogen-Refueling-Solutions", ticker: "ALHRS.PA", rating: "B", ratingFull: "HALAL I B", price: 1.47, change: -2.65, color: "#00838f" },
+            { name: "Genoway SA", ticker: "ALGEN.PA", rating: "B", ratingFull: "HALAL I B", price: 2.53, change: -5.42, color: "#2e7d32" },
+            { name: "Broadpeak SA", ticker: "ALBPK.PA", rating: "C-", ratingFull: "HALAL I C-", price: 2.27, change: -3.40, color: "#6a1b9a" },
+            { name: "Travel Technology Interactive", ticker: "ALTTI.PA", rating: "B+", ratingFull: "HALAL I B+", price: 2.85, change: 0.00, color: "#00695c" },
+            { name: "Hitechpros SA", ticker: "ALHIT.PA", rating: "A", ratingFull: "HALAL I A", price: 14.00, change: -0.71, color: "#1a237e" },
+            { name: "Cogra Quarante Huit SA", ticker: "ALCOG.PA", rating: "C", ratingFull: "HALAL I C", price: 6.96, change: -0.29, color: "#4e342e" },
+            { name: "Orinoquia Real Estate SOCIMI", ticker: "MLORQ.PA", rating: "B-", ratingFull: "HALAL I B-", price: 1.55, change: 0.00, color: "#558b2f" },
+            { name: "MacomptaFr SA", ticker: "MLMCA.PA", rating: "A+", ratingFull: "HALAL I A+", price: 5.45, change: 0.00, color: "#0277bd" },
+            { name: "Gensight Biologics SA", ticker: "SIGHT.PA", rating: "C", ratingFull: "HALAL I C", price: 0.08, change: -4.39, color: "#4527a0" },
+            { name: "Mon Courtier Energie SAS", ticker: "ALMCE.PA", rating: "B", ratingFull: "HALAL I B", price: 4.56, change: -0.88, color: "#bf360c" },
+            { name: "Charwood Energy SA", ticker: "ALCWE.PA", rating: "A-", ratingFull: "HALAL I A-", price: 3.16, change: -1.94, color: "#2e7d32" },
+            { name: "F I P P SA", ticker: "FIPP.PA", rating: "A-", ratingFull: "HALAL I A-", price: 0.11, change: -7.77, color: "#0d47a1" },
+            { name: "Intrasense SA", ticker: "ALINS.PA", rating: "B", ratingFull: "HALAL I B", price: 0.27, change: -1.89, color: "#424242" },
+            { name: "Mg International SA", ticker: "ALMGI.PA", rating: "B-", ratingFull: "HALAL I B-", price: 2.30, change: 0.00, color: "#006064" },
+            { name: "BD Multi Media SA", ticker: "ALBDM.PA", rating: "C", ratingFull: "HALAL I C", price: 4.39, change: -0.92, color: "#283593" },
+            { name: "Spineguard SA", ticker: "ALSGD.PA", rating: "B-", ratingFull: "HALAL I B-", price: 0.12, change: -11.91, color: "#37474f" },
+            { name: "Bluelinea SA", ticker: "ALBLU.PA", rating: "C+", ratingFull: "HALAL I C+", price: 0.50, change: 0.00, color: "#7b1fa2" },
+            { name: "La Savonnerie de Nyons SA", ticker: "MLSDN.PA", rating: "C+", ratingFull: "HALAL I C+", price: 29.40, change: -3.52, color: "#4e342e" },
+            { name: "Media Lab SpA", ticker: "MLLAB.PA", rating: "A", ratingFull: "HALAL I A", price: 3.20, change: 0.00, color: "#0277bd" },
+            { name: "Compagnie des Eaux de Royan", ticker: "MLEDR.PA", rating: "B", ratingFull: "HALAL I B", price: 42.20, change: -4.46, color: "#00695c" },
+            { name: "Finaxo Environnement SA", ticker: "MLFXO.PA", rating: "A+", ratingFull: "HALAL I A+", price: 4.30, change: 0.00, color: "#ad1457" },
+            { name: "Proactis SA", ticker: "PROAC.PA", rating: "B+", ratingFull: "HALAL I B+", price: 0.04, change: 0.00, color: "#37474f" },
+            { name: "Onlineformapro SA", ticker: "MLONL.PA", rating: "C-", ratingFull: "HALAL I C-", price: 0.90, change: 0.00, color: "#1565c0" },
+            { name: "AST Groupe SA", ticker: "ALAST.PA", rating: "B-", ratingFull: "HALAL I B-", price: 0.48, change: -3.21, color: "#b71c1c" },
+            { name: "Witbe SA", ticker: "ALWIT.PA", rating: "B", ratingFull: "HALAL I B", price: 1.40, change: -0.36, color: "#0d47a1" },
+            { name: "Neolife SA", ticker: "ALNLF.PA", rating: "C-", ratingFull: "HALAL I C-", price: 0.06, change: 0.00, color: "#2e7d32" },
+            { name: "Ethero", ticker: "ALENT.PA", rating: "A+", ratingFull: "HALAL I A+", price: 1.21, change: -3.60, color: "#6a1b9a" },
+            { name: "Vialife SA", ticker: "ALVIA.PA", rating: "B", ratingFull: "HALAL I B", price: 12.30, change: 0.00, color: "#e65100" },
+            { name: "Groupe Okwind SA", ticker: "ALOKW.PA", rating: "B-", ratingFull: "HALAL I B-", price: 0.41, change: -0.24, color: "#00c853" },
+            { name: "Klarsen SA", ticker: "ALKLA.PA", rating: "A+", ratingFull: "HALAL I A+", price: 1.14, change: -3.39, color: "#1a237e" },
+            { name: "Bonyf NV", ticker: "MLBON.PA", rating: "A+", ratingFull: "HALAL I A+", price: 5.25, change: 0.00, color: "#263238" },
+            { name: "Rapid Nutrition PLC", ticker: "ALRPD.PA", rating: "B-", ratingFull: "HALAL I B-", price: 10.90, change: -7.50, color: "#bf360c" },
+            { name: "Damaris SA", ticker: "MLDAM.PA", rating: "B", ratingFull: "HALAL I B", price: 7.50, change: 0.00, color: "#004d40" },
+            { name: "Rallye SA", ticker: "RAL.PA", rating: "B+", ratingFull: "HALAL I B+", price: 0.04, change: -3.50, color: "#e53935" },
+            { name: "Lepermislibre SA", ticker: "ALLPL.PA", rating: "C", ratingFull: "HALAL I C", price: 0.08, change: -2.42, color: "#ad1457" },
+            { name: "Azorean Aquatic Technologies", ticker: "MLAAT.PA", rating: "A+", ratingFull: "HALAL I A+", price: 0.26, change: 0.00, color: "#00838f" },
+            { name: "Theravet SA", ticker: "ALVET.PA", rating: "A-", ratingFull: "HALAL I A-", price: 0.08, change: 0.00, color: "#e53935" },
+            { name: "Groupe Plus Values SA", ticker: "MLPVG.PA", rating: "C+", ratingFull: "HALAL I C+", price: 0.68, change: 0.00, color: "#2e7d32" },
+            { name: "Pet Service Holding NV", ticker: "MLPET.PA", rating: "C+", ratingFull: "HALAL I C+", price: 4.76, change: -3.48, color: "#1565c0" },
+            { name: "Inmosupa SOCIMI SA", ticker: "MLISP.PA", rating: "A+", ratingFull: "HALAL I A+", price: 1.50, change: 0.00, color: "#4527a0" },
+            { name: "Iposa Properties SOCIMI SA", ticker: "MLIPO.PA", rating: "A", ratingFull: "HALAL I A", price: 1.20, change: 0.00, color: "#37474f" },
+            { name: "Res Gestae SOCIMI SA", ticker: "MLJDL.PA", rating: "B-", ratingFull: "HALAL I B-", price: 1.00, change: 0.00, color: "#6d4c41" },
+            { name: "Aroca del Pinar Socimi SA", ticker: "MLARO.PA", rating: "A+", ratingFull: "HALAL I A+", price: 1.10, change: 0.00, color: "#00695c" },
+            { name: "Wiziboat SA", ticker: "MLWIZ.PA", rating: "A+", ratingFull: "HALAL I A+", price: 5.65, change: 0.00, color: "#0d47a1" },
+            { name: "Ractool SA", ticker: "MLRAC.PA", rating: "B", ratingFull: "HALAL I B", price: 0.82, change: 0.00, color: "#bf360c" },
+        ];
+
+        // Rating utilities
+        const RATING_BASE = { A: 30, B: 20, C: 10 };
+        const RATING_MOD = { '+': 2, '-': -1 };
+
+        function getRatingCategory(rating) { return rating[0]; }
+
+        function getRatingClass(rating) { return `rating-${rating[0].toLowerCase()}`; }
+
+        function getRatingScore(rating) {
+            return (RATING_BASE[rating[0]] || 0) + (rating.length > 1 ? (RATING_MOD[rating[1]] || 0) : 0);
+        }
+
+        const SUFFIX_RE = /\b(SA|SE|SAS|NV|SpA|SB|PLC|SOCIMI)\b/gi;
+        function getInitials(name) {
+            const words = name.replace(SUFFIX_RE, '').trim().split(/\s+/);
+            return words.length === 1
+                ? words[0].substring(0, 2).toUpperCase()
+                : (words[0][0] + words[1][0]).toUpperCase();
+        }
+
+        function formatPrice(price) {
+            return '\u20AC' + price.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatChange(change) {
+            if (change > 0) return `+${change.toFixed(2)}%`;
+            if (change < 0) return `${change.toFixed(2)}%`;
+            return '0.00%';
+        }
+
+        function changeClass(change) {
+            return change > 0 ? 'positive' : change < 0 ? 'negative' : 'neutral';
+        }
+
+        // Cached DOM refs
+        const $list = document.getElementById('stockList');
+        const $empty = document.getElementById('emptyState');
+        const $searchCount = document.getElementById('searchCount');
+        const $liveDot = document.getElementById('liveDot');
+        const $liveStatus = document.getElementById('liveStatus');
+        const $scrollTop = document.getElementById('scrollTop');
+
+        // Sort comparators (avoids switch on every render)
+        const SORTERS = {
+            'name-asc': (a, b) => a.name.localeCompare(b.name),
+            'name-desc': (a, b) => b.name.localeCompare(a.name),
+            'price-desc': (a, b) => b.price - a.price,
+            'price-asc': (a, b) => a.price - b.price,
+            'change-desc': (a, b) => b.change - a.change,
+            'change-asc': (a, b) => a.change - b.change,
+            'rating-asc': (a, b) => getRatingScore(b.rating) - getRatingScore(a.rating),
+        };
+
+        // State
+        let activeFilter = 'all';
+        let searchQuery = '';
+        let sortMode = 'default';
+
+        function getFiltered() {
+            const q = searchQuery.toLowerCase();
+            let filtered = stocks.filter(stock => {
+                if (activeFilter !== 'all' && getRatingCategory(stock.rating) !== activeFilter) return false;
+                if (q) {
+                    return stock.name.toLowerCase().includes(q) ||
+                        stock.ticker.toLowerCase().includes(q) ||
+                        stock.ratingFull.toLowerCase().includes(q);
+                }
+                return true;
+            });
+            const sorter = SORTERS[sortMode];
+            if (sorter) filtered.sort(sorter);
+            return filtered;
+        }
+
+        // Full render (used for filter/sort/search changes)
+        function renderStocks() {
+            const filtered = getFiltered();
+            $searchCount.textContent = `${filtered.length} stock${filtered.length !== 1 ? 's' : ''}`;
+
+            if (filtered.length === 0) {
+                $list.innerHTML = '';
+                $empty.style.display = 'block';
+                return;
+            }
+            $empty.style.display = 'none';
+
+            $list.innerHTML = filtered.map((stock, i) => {
+                const rc = getRatingClass(stock.rating);
+                return `<li class="stock-row" style="animation-delay:${Math.min(i * 0.02, 0.5)}s" data-ticker="${stock.ticker}">
+            <span class="stock-rank">${i + 1}</span>
+            <div class="stock-info">
+                <div class="stock-avatar" style="background:${stock.color}">${getInitials(stock.name)}</div>
+                <div class="stock-details">
+                    <div class="stock-name">${stock.name}</div>
+                    <div class="stock-meta">
+                        <span class="stock-ticker">${stock.ticker}</span>
+                        <span class="halal-badge ${rc}">${stock.ratingFull}</span>
+                    </div>
+                </div>
+            </div>
+            <span class="stock-price">${formatPrice(stock.price)}</span>
+            <span class="stock-change ${changeClass(stock.change)}">${formatChange(stock.change)}</span>
+            <span class="stock-rating-cell"><span class="rating-pill ${rc}">${stock.rating}</span></span>
+        </li>`;
+            }).join('');
+        }
+
+        // Targeted price-only DOM update (no innerHTML rebuild)
+        function updatePricesInPlace() {
+            const rows = $list.querySelectorAll('.stock-row');
+            for (const row of rows) {
+                const ticker = row.dataset.ticker;
+                const stock = stockMap[ticker];
+                if (!stock) continue;
+                const priceEl = row.querySelector('.stock-price');
+                const changeEl = row.querySelector('.stock-change');
+                priceEl.textContent = formatPrice(stock.price);
+                priceEl.classList.remove('loading');
+                changeEl.textContent = formatChange(stock.change);
+                changeEl.className = `stock-change ${changeClass(stock.change)}`;
+            }
+        }
+
+        // Build ticker->stock lookup once
+        const stockMap = Object.create(null);
+        for (const s of stocks) stockMap[s.ticker] = s;
+
+        function updateStats() {
+            let a = 0, b = 0, c = 0;
+            for (const s of stocks) {
+                const cat = s.rating[0];
+                if (cat === 'A') a++;
+                else if (cat === 'B') b++;
+                else c++;
+            }
+            document.getElementById('totalStocks').textContent = stocks.length;
+            document.getElementById('ratingACount').textContent = a;
+            document.getElementById('ratingBCount').textContent = b;
+            document.getElementById('ratingCCount').textContent = c;
+        }
+
+        // Debounced search
+        let searchTimer = null;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                searchQuery = e.target.value;
+                renderStocks();
+            }, 150);
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.dataset.filter;
+                renderStocks();
+            });
+        });
+
+        document.getElementById('sortSelect').addEventListener('change', (e) => {
+            sortMode = e.target.value;
+            renderStocks();
+        });
+
+        // Scroll to top
+        window.addEventListener('scroll', () => {
+            $scrollTop.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+        $scrollTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Live data
+        function setLiveStatus(message, online) {
+            $liveStatus.textContent = message;
+            $liveDot.classList.toggle('offline', !online);
+        }
+
+        async function fetchLiveQuotes() {
+            try {
+                // Add shimmer to existing DOM cells
+                $list.querySelectorAll('.stock-price, .stock-change').forEach(el => el.classList.add('loading'));
+                setLiveStatus('Refreshing prices...', true);
+
+                const res = await fetch('/api/quotes');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                let updated = 0;
+                for (const q of data.quotes) {
+                    const stock = stockMap[q.symbol];
+                    if (stock && q.price !== null) {
+                        stock.price = q.price;
+                        if (q.changePercent !== null) stock.change = Math.round(q.changePercent * 100) / 100;
+                        updated++;
+                    }
+                }
+
+                // If sort/filter depend on price, do full re-render; otherwise patch in place
+                if (sortMode.startsWith('price') || sortMode.startsWith('change')) {
+                    renderStocks();
+                } else {
+                    updatePricesInPlace();
+                }
+
+                const time = new Date(data.timestamp).toLocaleTimeString();
+                setLiveStatus(`Live prices \u00b7 Updated ${time} \u00b7 ${updated}/${stocks.length} tickers`, true);
+            } catch (err) {
+                console.warn('Live fetch failed:', err);
+                $list.querySelectorAll('.loading').forEach(el => el.classList.remove('loading'));
+                setLiveStatus('Live update failed \u2013 showing cached data', false);
+            }
+        }
+
+        // Init
+        updateStats();
+        renderStocks();
+        fetchLiveQuotes();
+        setInterval(fetchLiveQuotes, 60_000);
+    </script>
+
+</body>
+
+</html>
