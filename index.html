@@ -421,6 +421,19 @@
             overflow: hidden;
         }
 
+        .stock-logo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+            background: white;
+            padding: 4px;
+            box-sizing: border-box;
+        }
+
         .stock-details {
             min-width: 0;
         }
@@ -1036,6 +1049,83 @@
             { name: "Ractool SA", ticker: "MLRAC.PA", rating: "B", ratingFull: "HALAL I B", price: 0.82, change: 0.00, color: "#bf360c" },
         ];
 
+        // Stock logos via Google Favicon API (only domains verified to have real icons)
+        const _F = d => `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${d}&size=128`;
+        const STOCK_LOGOS = {
+            "OR.PA": _F("lorealparis.com"),
+            "SU.PA": _F("se.com"),
+            "LR.PA": _F("legrand.us"),
+            "EL.PA": _F("essilorluxottica.com"),
+            "SAN.PA": _F("sanofi.com"),
+            "AI.PA": _F("airliquide.com"),
+            "DSY.PA": _F("3ds.com"),
+            "CAP.PA": _F("capgemini.com"),
+            "DIM.PA": _F("sartorius.com"),
+            "BVI.PA": _F("bureauveritas.com"),
+            "BIM.PA": _F("biomerieux.com"),
+            "GTT.PA": _F("gtt.fr"),
+            "VIRP.PA": _F("virbac.com"),
+            "EXENS.PA": _F("exosens.com"),
+            "ATE.PA": _F("alten.com"),
+            "VU.PA": _F("vusiongroup.com"),
+            "TRI.PA": _F("trigano.eu"),
+            "BB.PA": _F("bicworld.com"),
+            "ITP.PA": _F("interparfums-finance.fr"),
+            "RBT.PA": _F("robertet.com"),
+            "PLNW.PA": _F("planisware.com"),
+            "MAU.PA": _F("maureletprom.fr"),
+            "VETO.PA": _F("vetoquinol.com"),
+            "NRO.PA": _F("neurones.net"),
+            "SOI.PA": _F("soitec.com"),
+            "AUB.PA": _F("aubay.com"),
+            "THEP.PA": _F("thermador-groupe.fr"),
+            "ASY.PA": _F("assystem.com"),
+            "EQS.PA": _F("equasens.com"),
+            "BOL.PA": _F("boiron.com"),
+            "ALGIL.PA": _F("groupeguillin.fr"),
+            "PERR.PA": _F("gerardperrier.com"),
+            "ALERS.PA": _F("eurobio-scientific.com"),
+            "PARRO.PA": _F("parrot.com"),
+            "ALBFR.PA": _F("sidetrade.com"),
+            "ALSTW.PA": _F("streamwide.com"),
+            "EAPI.PA": _F("euroapi.com"),
+            "ALLIX.PA": _F("wallix.com"),
+            "ALVU.PA": _F("vente-unique.com"),
+            "ALPM.PA": _F("precia.com"),
+            "MAAT.PA": _F("maatpharma.com"),
+            "ABNX.PA": _F("abionyx.com"),
+            "ADOC.PA": _F("adocia.com"),
+            "ALCJ.PA": _F("crossject.com"),
+            "COH.PA": _F("coheris.com"),
+            "ALHGR.PA": _F("hoffmann-green.com"),
+            "ALBKK.PA": _F("baikowski.com"),
+            "ALODC.PA": _F("omerdecugis.com"),
+            "ALBLD.PA": _F("bilendi.com"),
+            "SACI.PA": _F("fiducial.fr"),
+            "ALDRV.PA": _F("dronevolt.com"),
+            "ALITL.PA": _F("itlink.fr"),
+            "MEMS.PA": _F("memscap.com"),
+            "ALGEN.PA": _F("genoway.com"),
+            "ALBPK.PA": _F("broadpeak.tv"),
+            "ALHIT.PA": _F("hitechpros.com"),
+            "ALMCE.PA": _F("moncourtierenergie.com"),
+            "ALCWE.PA": _F("charwood-energy.com"),
+            "ALINS.PA": _F("intrasense.fr"),
+            "ALSGD.PA": _F("spineguard.com"),
+            "ALBLU.PA": _F("bluelinea.com"),
+            "PROAC.PA": _F("proactis.com"),
+            "ALAST.PA": _F("ast-groupe.fr"),
+            "ALWIT.PA": _F("witbe.net"),
+            "ALOKW.PA": _F("okwind.fr"),
+            "MLBON.PA": _F("bonyf.com"),
+            "RAL.PA": _F("rallye.fr"),
+            "ALLPL.PA": _F("lepermislibre.fr"),
+            "ALVET.PA": _F("theravet.com"),
+            "MLMCA.PA": _F("macompta.fr"),
+            "ALESE.PA": _F("entech.fr"),
+            "MLCHE.PA": _F("cheops.fr"),
+        };
+
         // Rating utilities
         const RATING_BASE = { A: 30, B: 20, C: 10 };
         const RATING_MOD = { '+': 2, '-': -1 };
@@ -1124,10 +1214,12 @@
 
             $list.innerHTML = filtered.map((stock, i) => {
                 const rc = getRatingClass(stock.rating);
+                const logoUrl = STOCK_LOGOS[stock.ticker];
+                const logoImg = logoUrl ? `<img class="stock-logo" src="${logoUrl}" alt="" loading="lazy" onerror="this.remove()">` : '';
                 return `<li class="stock-row" style="animation-delay:${Math.min(i * 0.02, 0.5)}s" data-ticker="${stock.ticker}">
             <span class="stock-rank">${i + 1}</span>
             <div class="stock-info">
-                <div class="stock-avatar" style="background:${stock.color}">${getInitials(stock.name)}</div>
+                <div class="stock-avatar" style="background:${stock.color}">${getInitials(stock.name)}${logoImg}</div>
                 <div class="stock-details">
                     <div class="stock-name">${stock.name}</div>
                     <div class="stock-meta">
