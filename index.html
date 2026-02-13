@@ -625,6 +625,168 @@
             opacity: 0;
         }
 
+        /* Screening Modal */
+        .screening-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            margin-top: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .screening-trigger:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: var(--accent-purple-dim);
+        }
+
+        .screening-trigger svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            max-width: 720px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 36px;
+            position: relative;
+            transform: translateY(20px) scale(0.97);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.open .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+            background: var(--accent-red-dim);
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .prohibited-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .prohibited-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 12px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+
+        .prohibited-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .prohibited-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            position: relative;
+        }
+
+        .prohibited-icon::after {
+            content: '';
+            position: absolute;
+            width: 110%;
+            height: 2px;
+            background: var(--accent-red);
+            transform: rotate(-45deg);
+            border-radius: 2px;
+        }
+
+        .prohibited-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .prohibited-desc {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: -4px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .navbar-inner {
@@ -728,6 +890,19 @@
 
             .stats-bar {
                 gap: 16px;
+            }
+
+            .prohibited-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .modal-content {
+                padding: 24px 18px;
+            }
+
+            .modal-title {
+                font-size: 18px;
             }
         }
 
@@ -1202,7 +1377,77 @@
             <span class="live-dot" id="liveDot"></span>
             <span id="liveStatus">Loading live prices...</span>
         </div>
+
+        <button class="screening-trigger" id="openScreening">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            How do we screen stocks?
+        </button>
     </section>
+
+    <!-- Screening Modal -->
+    <div class="modal-overlay" id="screeningModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeScreening">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <h2 class="modal-title">Prohibited Business Activities</h2>
+            <p class="modal-subtitle">Companies involved in these activities are classified as Not Shariah-compliant during the screening process.</p>
+            <div class="prohibited-grid">
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#127830;</div>
+                    <span class="prohibited-name">Non-Halal Foods</span>
+                    <span class="prohibited-desc">Non-halal foods</span>
+                </div>
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#127863;</div>
+                    <span class="prohibited-name">Alcohol</span>
+                    <span class="prohibited-desc">Production & sales</span>
+                </div>
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#127922;</div>
+                    <span class="prohibited-name">Gambling</span>
+                    <span class="prohibited-desc">Casinos, betting, lotteries</span>
+                </div>
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#128286;</div>
+                    <span class="prohibited-name">Adult Entertainment</span>
+                    <span class="prohibited-desc">Explicit content</span>
+                </div>
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#128684;</div>
+                    <span class="prohibited-name">Tobacco</span>
+                    <span class="prohibited-desc">Manufacturing & sales</span>
+                </div>
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#127807;</div>
+                    <span class="prohibited-name">Marijuana</span>
+                    <span class="prohibited-desc">Recreational cannabis</span>
+                </div>
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#128163;</div>
+                    <span class="prohibited-name">Weapons</span>
+                    <span class="prohibited-desc">Arms & defense products</span>
+                </div>
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#129514;</div>
+                    <span class="prohibited-name">Cloning</span>
+                    <span class="prohibited-desc">Human cloning activities</span>
+                </div>
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#127974;</div>
+                    <span class="prohibited-name">Interest-based Finance</span>
+                    <span class="prohibited-desc">Conventional banking</span>
+                </div>
+                <div class="prohibited-card">
+                    <div class="prohibited-icon">&#128200;</div>
+                    <span class="prohibited-name">Excess Debt</span>
+                    <span class="prohibited-desc">High debt ratios</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Controls -->
     <div class="controls">
@@ -2067,6 +2312,24 @@
         }
 
         window.addEventListener('popstate', handleHash);
+
+        // Screening modal
+        const $screeningModal = document.getElementById('screeningModal');
+        document.getElementById('openScreening').addEventListener('click', () => {
+            $screeningModal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        function closeScreeningModal() {
+            $screeningModal.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        document.getElementById('closeScreening').addEventListener('click', closeScreeningModal);
+        $screeningModal.addEventListener('click', (e) => {
+            if (e.target === $screeningModal) closeScreeningModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && $screeningModal.classList.contains('open')) closeScreeningModal();
+        });
 
         // Init
         updateStats();
