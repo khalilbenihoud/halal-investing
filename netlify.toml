@@ -12,6 +12,14 @@
 [functions."stock"]
   timeout = 15
 
+[functions."chart"]
+  timeout = 15
+
+[[redirects]]
+  from = "/api/stock/:ticker/chart"
+  to = "/.netlify/functions/chart?ticker=:ticker"
+  status = 200
+
 [[redirects]]
   from = "/api/stock/:ticker"
   to = "/.netlify/functions/stock?ticker=:ticker"

@@ -153,6 +153,59 @@ app.get('/api/stock/:ticker', async (req, res) => {
     }
 });
 
+// Range presets for chart endpoint
+const RANGE_CONFIG = {
+    '1M':  { months: 1,  interval: '1d'  },
+    '6M':  { months: 6,  interval: '1d'  },
+    '1Y':  { months: 12, interval: '1d'  },
+    '5Y':  { months: 60, interval: '1wk' },
+};
+
+app.get('/api/stock/:ticker/chart', async (req, res) => {
+    const ticker = req.params.ticker.toUpperCase();
+    if (!TICKERS.includes(ticker)) {
+        return res.status(404).json({ error: 'Ticker not found' });
+    }
+
+    const range = RANGE_CONFIG[req.query.range] ? req.query.range : '1Y';
+    const cacheKey = `${ticker}:chart:${range}`;
+    const now = Date.now();
+    const cached = stockDetailCache.get(cacheKey);
+    if (cached && (now - cached.timestamp) < STOCK_DETAIL_TTL) {
+        return res.json(cached.data);
+    }
+
+    try {
+        const cfg = RANGE_CONFIG[range];
+        const period1 = new Date();
+        period1.setMonth(period1.getMonth() - cfg.months);
+
+        const result = await yahooFinance.chart(ticker, {
+            period1,
+            interval: cfg.interval,
+        });
+
+        const quotes = (result.quotes || [])
+            .filter(q => q.close != null && q.date != null)
+            .map(q => ({
+                time: q.date.toISOString().slice(0, 10),
+                value: Math.round(q.close * 100) / 100,
+            }));
+
+        const data = {
+            quotes,
+            currency: result.meta?.currency || 'EUR',
+            timestamp: now,
+        };
+
+        stockDetailCache.set(cacheKey, { data, timestamp: now });
+        res.json(data);
+    } catch (err) {
+        console.error(`Chart error for ${ticker} (${range}):`, err.message);
+        res.status(500).json({ error: 'Failed to fetch chart data' });
+    }
+});
+
 app.use(express.static(path.join(__dirname)));
 
 app.listen(PORT, () => {
