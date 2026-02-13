@@ -38,6 +38,10 @@ let cacheTimestamp = 0;
 let inflightFetch = null;
 const CACHE_TTL = 60_000;
 
+// Per-ticker stock detail cache (5-minute TTL)
+const stockDetailCache = new Map();
+const STOCK_DETAIL_TTL = 5 * 60_000;
+
 async function fetchQuotes() {
     const now = Date.now();
     if (cachedQuotes && (now - cacheTimestamp) < CACHE_TTL) {
@@ -90,6 +94,62 @@ app.get('/api/quotes', async (_req, res) => {
     } catch (err) {
         console.error('Quote fetch error:', err.message);
         res.status(500).json({ error: 'Failed to fetch quotes' });
+    }
+});
+
+app.get('/api/stock/:ticker', async (req, res) => {
+    const ticker = req.params.ticker.toUpperCase();
+    if (!TICKERS.includes(ticker)) {
+        return res.status(404).json({ error: 'Ticker not found' });
+    }
+
+    const now = Date.now();
+    const cached = stockDetailCache.get(ticker);
+    if (cached && (now - cached.timestamp) < STOCK_DETAIL_TTL) {
+        return res.json(cached.data);
+    }
+
+    try {
+        const result = await yahooFinance.quoteSummary(ticker, {
+            modules: ['assetProfile', 'price', 'summaryDetail']
+        });
+
+        const ap = result.assetProfile || {};
+        const pr = result.price || {};
+        const sd = result.summaryDetail || {};
+
+        const data = {
+            profile: {
+                sector: ap.sector || null,
+                industry: ap.industry || null,
+                description: ap.longBusinessSummary || null,
+                website: ap.website || null,
+                employees: ap.fullTimeEmployees || null,
+                city: ap.city || null,
+                country: ap.country || null,
+            },
+            price: {
+                regularMarketPrice: pr.regularMarketPrice ?? null,
+                regularMarketChange: pr.regularMarketChange ?? null,
+                regularMarketChangePercent: pr.regularMarketChangePercent ?? null,
+                marketCap: pr.marketCap ?? null,
+                currency: pr.currency || 'EUR',
+            },
+            summaryDetail: {
+                fiftyTwoWeekHigh: sd.fiftyTwoWeekHigh ?? null,
+                fiftyTwoWeekLow: sd.fiftyTwoWeekLow ?? null,
+                averageVolume: sd.averageDailyVolume10Day ?? sd.averageVolume ?? null,
+                dividendYield: sd.dividendYield ?? null,
+                trailingPE: sd.trailingPE ?? null,
+            },
+            timestamp: now,
+        };
+
+        stockDetailCache.set(ticker, { data, timestamp: now });
+        res.json(data);
+    } catch (err) {
+        console.error(`Stock detail error for ${ticker}:`, err.message);
+        res.status(500).json({ error: 'Failed to fetch stock details' });
     }
 });
 

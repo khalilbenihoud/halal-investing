@@ -9,6 +9,14 @@
 [functions."quotes"]
   timeout = 26
 
+[functions."stock"]
+  timeout = 15
+
+[[redirects]]
+  from = "/api/stock/:ticker"
+  to = "/.netlify/functions/stock?ticker=:ticker"
+  status = 200
+
 [[redirects]]
   from = "/api/quotes"
   to = "/.netlify/functions/quotes"

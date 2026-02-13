@@ -800,6 +800,265 @@
             animation: shimmer 1.2s ease-in-out infinite;
             border-radius: 4px;
         }
+
+        /* ============ Detail View ============ */
+        .detail-view {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+
+        .detail-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            margin: 24px 0 32px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .detail-back:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .detail-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .detail-avatar .stock-logo {
+            border-radius: 16px;
+            padding: 6px;
+        }
+
+        .detail-title {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .detail-name {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .detail-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .detail-ticker {
+            font-size: 14px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .detail-price-block {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .detail-price-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.02em;
+        }
+
+        .detail-price-change {
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .detail-price-change.positive { color: var(--accent-green); }
+        .detail-price-change.negative { color: var(--accent-red); }
+        .detail-price-change.neutral { color: var(--text-tertiary); }
+
+        /* Profile card */
+        .detail-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .detail-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .detail-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        .detail-profile-description {
+            grid-column: 1 / -1;
+        }
+
+        .detail-description-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .detail-stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .detail-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-stat-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .detail-stat-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .detail-stat-value a {
+            color: var(--accent-purple);
+            text-decoration: none;
+        }
+
+        .detail-stat-value a:hover {
+            text-decoration: underline;
+        }
+
+        /* Skeleton loading for detail cards */
+        .detail-skeleton {
+            border-radius: 6px;
+            background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+            background-size: 200px 100%;
+            animation: shimmer 1.2s ease-in-out infinite;
+        }
+
+        .detail-skeleton-line {
+            height: 14px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-card-hover) 50%, var(--bg-elevated) 75%);
+            background-size: 200px 100%;
+            animation: shimmer 1.2s ease-in-out infinite;
+        }
+
+        .detail-skeleton-line:last-child { margin-bottom: 0; width: 60%; }
+
+        /* Detail view error state */
+        .detail-error {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-tertiary);
+            font-size: 14px;
+        }
+
+        .detail-error-retry {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--accent-purple);
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .detail-error-retry:hover {
+            background: var(--accent-purple-dim);
+        }
+
+        @media (max-width: 768px) {
+            .detail-header {
+                gap: 14px;
+            }
+
+            .detail-avatar {
+                width: 48px;
+                height: 48px;
+                font-size: 16px;
+                border-radius: 12px;
+            }
+
+            .detail-name {
+                font-size: 22px;
+            }
+
+            .detail-price-value {
+                font-size: 24px;
+            }
+
+            .detail-price-block {
+                width: 100%;
+                text-align: left;
+                margin-top: 4px;
+            }
+
+            .detail-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-card {
+                padding: 18px;
+            }
+        }
     </style>
 </head>
 
@@ -911,6 +1170,25 @@
             <p>No stocks found matching your search.</p>
         </div>
     </div>
+
+    <!-- Detail View -->
+    <section class="detail-view" id="detailView" style="display:none;">
+        <button class="detail-back" id="detailBack">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+            </svg>
+            Back to list
+        </button>
+
+        <div class="detail-header" id="detailHeader">
+            <!-- Populated by JS -->
+        </div>
+
+        <div class="detail-cards" id="detailCards">
+            <!-- Populated by JS -->
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
@@ -1343,11 +1621,250 @@
             }
         }
 
+        // ============ Detail View ============
+        const $detailView = document.getElementById('detailView');
+        const $detailHeader = document.getElementById('detailHeader');
+        const $detailCards = document.getElementById('detailCards');
+        const $detailBack = document.getElementById('detailBack');
+
+        // List sections to hide/show
+        const $hero = document.querySelector('.hero');
+        const $controls = document.querySelector('.controls');
+        const $tableContainer = document.querySelector('.table-container');
+
+        let listScrollY = 0;
+
+        function formatMarketCap(val) {
+            if (val == null) return '-';
+            if (val >= 1e12) return '\u20AC' + (val / 1e12).toFixed(1) + 'T';
+            if (val >= 1e9) return '\u20AC' + (val / 1e9).toFixed(1) + 'B';
+            if (val >= 1e6) return '\u20AC' + (val / 1e6).toFixed(1) + 'M';
+            return '\u20AC' + val.toLocaleString('fr-FR');
+        }
+
+        function formatVolume(val) {
+            if (val == null) return '-';
+            if (val >= 1e6) return (val / 1e6).toFixed(1) + 'M';
+            if (val >= 1e3) return (val / 1e3).toFixed(1) + 'K';
+            return val.toLocaleString('fr-FR');
+        }
+
+        function formatPercent(val) {
+            if (val == null) return '-';
+            return (val * 100).toFixed(2) + '%';
+        }
+
+        function formatPE(val) {
+            if (val == null) return '-';
+            return val.toFixed(1);
+        }
+
+        function showDetailView(ticker) {
+            const stock = stockMap[ticker];
+            if (!stock) return;
+
+            listScrollY = window.scrollY;
+
+            // Hide list, show detail
+            $hero.style.display = 'none';
+            $controls.style.display = 'none';
+            $tableContainer.style.display = 'none';
+            $detailView.style.display = 'block';
+            window.scrollTo({ top: 0 });
+
+            // Update hash
+            history.pushState(null, '', `#/stock/${ticker}`);
+
+            // Render header instantly from local data
+            const rc = getRatingClass(stock.rating);
+            const logoUrl = STOCK_LOGOS[stock.ticker];
+            const logoImg = logoUrl ? `<img class="stock-logo" src="${logoUrl}" alt="" loading="lazy" onerror="this.remove()">` : '';
+            const chgClass = changeClass(stock.change);
+            const chgArrow = stock.change > 0 ? '\u25B2' : stock.change < 0 ? '\u25BC' : '';
+
+            $detailHeader.innerHTML = `
+                <div class="detail-avatar" style="background:${stock.color}">${getInitials(stock.name)}${logoImg}</div>
+                <div class="detail-title">
+                    <div class="detail-name">${stock.name}</div>
+                    <div class="detail-meta">
+                        <span class="detail-ticker">${stock.ticker}</span>
+                        <span class="halal-badge ${rc}">${stock.ratingFull}</span>
+                    </div>
+                </div>
+                <div class="detail-price-block">
+                    <div class="detail-price-value">${formatPrice(stock.price)}</div>
+                    <div class="detail-price-change ${chgClass}">${chgArrow} ${formatChange(stock.change)}</div>
+                </div>
+            `;
+
+            // Show skeleton cards while loading
+            $detailCards.innerHTML = `
+                <div class="detail-card">
+                    <div class="detail-card-title">Company Info</div>
+                    <div class="detail-stat-grid">
+                        ${Array(6).fill('<div class="detail-stat"><div class="detail-skeleton-line" style="width:40%"></div><div class="detail-skeleton-line" style="width:70%"></div></div>').join('')}
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Key Metrics</div>
+                    <div class="detail-stat-grid">
+                        ${Array(6).fill('<div class="detail-stat"><div class="detail-skeleton-line" style="width:50%"></div><div class="detail-skeleton-line" style="width:60%"></div></div>').join('')}
+                    </div>
+                </div>
+                <div class="detail-card detail-profile-description">
+                    <div class="detail-card-title">About</div>
+                    <div class="detail-skeleton-line" style="width:100%"></div>
+                    <div class="detail-skeleton-line" style="width:95%"></div>
+                    <div class="detail-skeleton-line" style="width:80%"></div>
+                    <div class="detail-skeleton-line" style="width:60%"></div>
+                </div>
+            `;
+
+            // Fetch profile data
+            fetchStockDetail(ticker);
+        }
+
+        async function fetchStockDetail(ticker) {
+            try {
+                const res = await fetch(`/api/stock/${encodeURIComponent(ticker)}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                renderDetailCards(data);
+            } catch (err) {
+                console.warn('Detail fetch failed:', err);
+                $detailCards.innerHTML = `
+                    <div class="detail-card detail-profile-description">
+                        <div class="detail-error">
+                            <p>Failed to load company details.</p>
+                            <button class="detail-error-retry" onclick="fetchStockDetail('${ticker}')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                                Retry
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderDetailCards(data) {
+            const p = data.profile || {};
+            const pr = data.price || {};
+            const sd = data.summaryDetail || {};
+
+            const websiteHtml = p.website
+                ? `<a href="${p.website}" target="_blank" rel="noopener">${p.website.replace(/^https?:\/\/(www\.)?/, '')}</a>`
+                : '-';
+            const location = [p.city, p.country].filter(Boolean).join(', ') || '-';
+
+            $detailCards.innerHTML = `
+                <div class="detail-card">
+                    <div class="detail-card-title">Company Info</div>
+                    <div class="detail-stat-grid">
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Sector</span>
+                            <span class="detail-stat-value">${p.sector || '-'}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Industry</span>
+                            <span class="detail-stat-value">${p.industry || '-'}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Location</span>
+                            <span class="detail-stat-value">${location}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Employees</span>
+                            <span class="detail-stat-value">${p.employees ? p.employees.toLocaleString('fr-FR') : '-'}</span>
+                        </div>
+                        <div class="detail-stat" style="grid-column:1/-1">
+                            <span class="detail-stat-label">Website</span>
+                            <span class="detail-stat-value">${websiteHtml}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-card">
+                    <div class="detail-card-title">Key Metrics</div>
+                    <div class="detail-stat-grid">
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Market Cap</span>
+                            <span class="detail-stat-value">${formatMarketCap(pr.marketCap)}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">P/E Ratio</span>
+                            <span class="detail-stat-value">${formatPE(sd.trailingPE)}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">52W High</span>
+                            <span class="detail-stat-value">${sd.fiftyTwoWeekHigh != null ? formatPrice(sd.fiftyTwoWeekHigh) : '-'}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">52W Low</span>
+                            <span class="detail-stat-value">${sd.fiftyTwoWeekLow != null ? formatPrice(sd.fiftyTwoWeekLow) : '-'}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Avg Volume</span>
+                            <span class="detail-stat-value">${formatVolume(sd.averageVolume)}</span>
+                        </div>
+                        <div class="detail-stat">
+                            <span class="detail-stat-label">Div Yield</span>
+                            <span class="detail-stat-value">${sd.dividendYield != null ? formatPercent(sd.dividendYield) : '-'}</span>
+                        </div>
+                    </div>
+                </div>
+                ${p.description ? `
+                <div class="detail-card detail-profile-description">
+                    <div class="detail-card-title">About</div>
+                    <div class="detail-description-text">${p.description}</div>
+                </div>` : ''}
+            `;
+        }
+
+        function hideDetailView() {
+            $detailView.style.display = 'none';
+            $hero.style.display = '';
+            $controls.style.display = '';
+            $tableContainer.style.display = '';
+            history.pushState(null, '', window.location.pathname);
+            window.scrollTo({ top: listScrollY });
+        }
+
+        $detailBack.addEventListener('click', hideDetailView);
+
+        // Click handler on stock rows (event delegation)
+        $list.addEventListener('click', (e) => {
+            const row = e.target.closest('.stock-row');
+            if (!row) return;
+            const ticker = row.dataset.ticker;
+            if (ticker) showDetailView(ticker);
+        });
+
+        // Hash-based navigation
+        function handleHash() {
+            const hash = window.location.hash;
+            const match = hash.match(/^#\/stock\/(.+)$/);
+            if (match) {
+                const ticker = decodeURIComponent(match[1]).toUpperCase();
+                if (stockMap[ticker]) {
+                    showDetailView(ticker);
+                    return;
+                }
+            }
+            // If no valid stock hash, show list
+            if ($detailView.style.display !== 'none') {
+                hideDetailView();
+            }
+        }
+
+        window.addEventListener('popstate', handleHash);
+
         // Init
         updateStats();
         renderStocks();
         fetchLiveQuotes();
         setInterval(fetchLiveQuotes, 60_000);
+
+        // Check hash on load
+        handleHash();
     </script>
 
 </body>
