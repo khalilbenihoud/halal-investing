@@ -206,6 +206,66 @@ app.get('/api/stock/:ticker/chart', async (req, res) => {
     }
 });
 
+// Sparklines: batch 1-month daily closes for all tickers
+let cachedSparklines = null;
+let sparklineCacheTimestamp = 0;
+let inflightSparklines = null;
+const SPARKLINE_CACHE_TTL = 15 * 60_000;
+
+async function fetchSparklines() {
+    const now = Date.now();
+    if (cachedSparklines && (now - sparklineCacheTimestamp) < SPARKLINE_CACHE_TTL) {
+        return cachedSparklines;
+    }
+    if (inflightSparklines) return inflightSparklines;
+
+    inflightSparklines = (async () => {
+        console.log(`[${new Date().toISOString()}] Fetching sparklines for ${TICKERS.length} tickers...`);
+        const period1 = new Date();
+        period1.setMonth(period1.getMonth() - 1);
+
+        const results = await Promise.allSettled(
+            TICKERS.map(async (ticker) => {
+                try {
+                    const result = await yahooFinance.chart(ticker, {
+                        period1,
+                        interval: '1d',
+                    });
+                    const closes = (result.quotes || [])
+                        .filter(q => q.close != null)
+                        .map(q => Math.round(q.close * 100) / 100);
+                    return { ticker, closes };
+                } catch {
+                    return { ticker, closes: [] };
+                }
+            })
+        );
+
+        const data = {};
+        for (const r of results) {
+            const val = r.status === 'fulfilled' ? r.value : { ticker: '?', closes: [] };
+            if (val.closes.length > 0) data[val.ticker] = val.closes;
+        }
+
+        console.log(`[${new Date().toISOString()}] Sparklines done: ${Object.keys(data).length}/${TICKERS.length} OK`);
+        cachedSparklines = data;
+        sparklineCacheTimestamp = Date.now();
+        return data;
+    })().finally(() => { inflightSparklines = null; });
+
+    return inflightSparklines;
+}
+
+app.get('/api/sparklines', async (_req, res) => {
+    try {
+        const data = await fetchSparklines();
+        res.json(data);
+    } catch (err) {
+        console.error('Sparklines fetch error:', err.message);
+        res.status(500).json({ error: 'Failed to fetch sparklines' });
+    }
+});
+
 app.use(express.static(path.join(__dirname)));
 
 app.listen(PORT, () => {

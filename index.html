@@ -358,7 +358,7 @@
 
         .table-header {
             display: grid;
-            grid-template-columns: 60px 1fr 120px 100px 120px;
+            grid-template-columns: 60px 1fr 100px 120px 100px 120px;
             padding: 12px 20px;
             font-size: 12px;
             font-weight: 600;
@@ -368,9 +368,9 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .table-header span:nth-child(3),
         .table-header span:nth-child(4),
-        .table-header span:nth-child(5) {
+        .table-header span:nth-child(5),
+        .table-header span:nth-child(6) {
             text-align: right;
         }
 
@@ -380,7 +380,7 @@
 
         .stock-row {
             display: grid;
-            grid-template-columns: 60px 1fr 120px 100px 120px;
+            grid-template-columns: 60px 1fr 100px 120px 100px 120px;
             align-items: center;
             padding: 14px 20px;
             border-bottom: 1px solid var(--border-color);
@@ -539,6 +539,28 @@
         .rating-pill.rating-c {
             background: rgba(245, 166, 35, 0.1);
             color: var(--rating-c);
+        }
+
+        /* Sparkline */
+        .stock-sparkline {
+            width: 100px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stock-sparkline svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .sparkline-placeholder {
+            width: 100%;
+            height: 16px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+            background-size: 200px 100%;
+            animation: shimmer 1.2s ease-in-out infinite;
         }
 
         /* Empty state */
@@ -830,11 +852,15 @@
                 display: none;
             }
 
-            .table-header span:nth-child(4) {
+            .table-header span:nth-child(3) {
                 display: none;
             }
 
             .table-header span:nth-child(5) {
+                display: none;
+            }
+
+            .table-header span:nth-child(6) {
                 display: none;
             }
 
@@ -845,6 +871,10 @@
             }
 
             .stock-rank {
+                display: none;
+            }
+
+            .stock-sparkline {
                 display: none;
             }
 
@@ -1484,6 +1514,7 @@
         <div class="table-header">
             <span>#</span>
             <span>Stock</span>
+            <span>30D</span>
             <span>Price</span>
             <span>24h</span>
             <span>Rating</span>
@@ -1818,6 +1849,38 @@
             return filtered;
         }
 
+        // ============ Sparklines (helpers) ============
+        let sparklineData = null;
+
+        function sparklineSVG(data, color) {
+            if (!data || data.length < 2) return '';
+            const w = 100, h = 32, pad = 2;
+            const min = Math.min(...data);
+            const max = Math.max(...data);
+            const range = max - min || 1;
+            const points = data.map((v, i) => {
+                const x = pad + (i / (data.length - 1)) * (w - pad * 2);
+                const y = pad + (1 - (v - min) / range) * (h - pad * 2);
+                return `${x.toFixed(1)},${y.toFixed(1)}`;
+            }).join(' ');
+            return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+        }
+
+        function populateSparklines() {
+            if (!sparklineData) return;
+            const cells = $list.querySelectorAll('.stock-sparkline');
+            for (const cell of cells) {
+                const ticker = cell.dataset.ticker;
+                const closes = sparklineData[ticker];
+                if (closes && closes.length >= 2) {
+                    const color = closes[closes.length - 1] >= closes[0] ? 'var(--accent-green)' : 'var(--accent-red)';
+                    cell.innerHTML = sparklineSVG(closes, color);
+                } else {
+                    cell.innerHTML = '';
+                }
+            }
+        }
+
         // Full render (used for filter/sort/search changes)
         function renderStocks() {
             const filtered = getFiltered();
@@ -1846,11 +1909,13 @@
                     </div>
                 </div>
             </div>
+            <span class="stock-sparkline" data-ticker="${stock.ticker}"><span class="sparkline-placeholder"></span></span>
             <span class="stock-price">${formatPrice(stock.price)}</span>
             <span class="stock-change ${changeClass(stock.change)}">${formatChange(stock.change)}</span>
             <span class="stock-rating-cell"><span class="rating-pill ${rc}">${stock.rating}</span></span>
         </li>`;
             }).join('');
+            populateSparklines();
         }
 
         // Targeted price-only DOM update (no innerHTML rebuild)
@@ -1960,6 +2025,21 @@
                 setLiveStatus('Live update failed \u2013 showing cached data', false);
             }
         }
+
+        // Fetch sparklines asynchronously after initial render
+        async function fetchSparklines() {
+            try {
+                const res = await fetch('/api/sparklines');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                sparklineData = await res.json();
+                populateSparklines();
+            } catch (err) {
+                console.warn('Sparkline fetch failed:', err);
+            }
+        }
+
+        // Fetch sparklines after initial render
+        fetchSparklines();
 
         // ============ Detail View ============
         const $detailView = document.getElementById('detailView');

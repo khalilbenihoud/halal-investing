@@ -15,6 +15,14 @@
 [functions."chart"]
   timeout = 15
 
+[functions."sparklines"]
+  timeout = 26
+
+[[redirects]]
+  from = "/api/sparklines"
+  to = "/.netlify/functions/sparklines"
+  status = 200
+
 [[redirects]]
   from = "/api/stock/*/chart"
   to = "/.netlify/functions/chart?ticker=:splat"
