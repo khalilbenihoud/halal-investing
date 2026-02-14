@@ -222,14 +222,14 @@ async function fetchSparklines() {
     inflightSparklines = (async () => {
         console.log(`[${new Date().toISOString()}] Fetching sparklines for ${TICKERS.length} tickers...`);
         const period1 = new Date();
-        period1.setMonth(period1.getMonth() - 1);
+        period1.setDate(period1.getDate() - 1);
 
         const results = await Promise.allSettled(
             TICKERS.map(async (ticker) => {
                 try {
                     const result = await yahooFinance.chart(ticker, {
                         period1,
-                        interval: '1d',
+                        interval: '15m',
                     });
                     const closes = (result.quotes || [])
                         .filter(q => q.close != null)
